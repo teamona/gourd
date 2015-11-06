@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp"
+    android:background="#c4e5e4ff"
+    android:clickable="true">
+
+    <com.loopj.android.image.SmartImageView
+            android:id="@+id/icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/ic_launcher" />
+
+    <TextView
+            android:id="@+id/name"
+            android:layout_width="150dip"
+            android:singleLine="true"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/icon"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/icon"
+            android:text="名前入ります" />
+
+    <TextView
+            android:id="@+id/screen_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="\uFF20gabu" android:layout_above="@+id/text"
+            android:layout_alignRight="@+id/text"
+            android:layout_alignEnd="@+id/text"/>
+
+    <TextView
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/name"
+            android:layout_below="@+id/name"
+            android:text="本文本文本文本文本文本文本文本文本文本文" />
+
+    <com.loopj.android.image.SmartImageView
+            android:id="@+id/fav"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_grade_white_24dp"
+            android:layout_below="@+id/text"
+            android:layout_toLeftOf="@+id/text"/>
+
+    <com.loopj.android.image.SmartImageView
+            android:id="@+id/rt"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_repeat_white_24dp"
+            android:layout_below="@+id/text"
+            android:layout_toRightOf="@+id/icon"/>
+</RelativeLayout>
