@@ -1,4 +1,4 @@
-package com.example.gourd.app;
+package com.teamona.gourd.app;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -30,12 +30,17 @@ public class AsyncTaskRT extends AsyncTask<Long, Void, Boolean> {
         return false;
     }
 
+    /*private void rtButton_Click(String str){
+
+    }*/
     @Override
     protected void onPostExecute(Boolean result) {
         if (result) {
+
             // うまく行ったときの処理
         } else {
             // 残念
         }
     }
+
 }

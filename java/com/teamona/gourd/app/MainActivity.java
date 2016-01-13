@@ -1,25 +1,23 @@
-package com.example.gourd.app;
+package com.teamona.gourd.app;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.EventLog;
-import android.view.*;
-import android.widget.Button;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
-import com.loopj.android.image.SmartImageView;
-
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
 
 import java.util.List;
 
-
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     private TweetAdapter mAdapter;
-    private twitter4j.Twitter mTwitter;
+    private Twitter mTwitter;
     private ListView mListView;
     private UserStream mUST;
     private ChangeBackground mChangeBackground;
@@ -73,9 +71,6 @@ public class MainActivity extends Activity {
         return true;
     }
 
-    private void rtButton_Click(String str){
-
-    }
 
     /*メニューの選択*/
     @Override
@@ -92,17 +87,18 @@ public class MainActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
+
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         mChangeBackground.onActivityResult(requestCode,resultCode,data);
     }
 
     private void reloadTimeLine() {             /*AsyncTaskはインターネットの接続と同時進行で処理するようにする*/
-        android.os.AsyncTask<Void, Void, List<twitter4j.Status>> task = new android.os.AsyncTask<Void, Void, List<twitter4j.Status>>() {
+        android.os.AsyncTask<Void, Void, List<twitter4j.Status>> task = new AsyncTask<Void, Void, List<twitter4j.Status>>() {
             @Override
             protected List<twitter4j.Status> doInBackground(Void... params) {
                 try {
                     return mTwitter.getHomeTimeline();      /*ここでエラーが起きたら*/
-                } catch (twitter4j.TwitterException e) {
+                } catch (TwitterException e) {
                     e.printStackTrace();                    /*デバッグ報告*/
                 }
                 return null;

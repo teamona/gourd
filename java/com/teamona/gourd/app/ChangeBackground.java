@@ -1,75 +1,52 @@
-package com.example.gourd.app;
+package com.teamona.gourd.app;
 
 import android.app.Activity;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
-import android.net.Uri;
-import android.os.Bundle;
-import android.provider.MediaStore;
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.Point;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.view.Display;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * Created by ruzeya on 2014/09/15.
  */
-public class change_backgroundActivity extends Activity {
+public class ChangeBackground {
 
     private Bitmap bitmap;
     private ImageView imageView;
     private int viewWidth, viewHeight;
+    private Context context;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_change_background);
-        // ウィンドウマネージャのインスタンス取得
-        WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
+    public ChangeBackground(Context context, ImageView imageView) {// ウィンドウマネージャのインスタンス取得
+        this.context = context;
+        this.imageView = imageView;
+
+        WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         // ディスプレイのインスタンスを生成
         Display display = manager.getDefaultDisplay();
 
-        // 画像サイズの取得
-        /*
-        Point point = new Point();
-        display.getSize(point);
-        viewWidth = point.x;
-        viewHeight = point.y;
-        */
         viewWidth = display.getWidth();
         viewHeight = display.getHeight();
-
-        imageView = (ImageView) findViewById(R.id.imageView1);
-
-        Button button = (Button) findViewById(R.id.button1);
-        button.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 画像が保存されてるフォルダにアクセス
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_PICK);
-                // 起動先アクティビティからデータを返してもらいたい場合
-                startActivityForResult(intent, 0);
-            }
-        });
     }
 
-    // 起動先アクティビティからデータを返してもらう
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public void onButtonClick(Activity activity) {
+        // 画像が保存されてるフォルダにアクセス
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_PICK);
+        // 起動先アクティビティからデータを返してもらいたい場合
+        activity.startActivityForResult(intent, 0);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // 画像を選択した時のみ実行
         if (data != null) {
             Uri uri = data.getData();
@@ -79,15 +56,36 @@ public class change_backgroundActivity extends Activity {
                 e.printStackTrace();
             }
             imageView.setImageBitmap(bitmap);
+            Preferences1 prefs1 = new Preferences1(context);
+            prefs1.setStringPreference("background", uri.toString());
         }
     }
 
-    // 取得したURIを用いて画像を読み込む
+    public void loadFromUri(Uri uri) {
+        // 画像を選択した時のみ実行
+        try {
+            bitmap = loadImage(uri, viewWidth, viewHeight);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        imageView.setImageBitmap(bitmap);
+    }
+
+    public Uri stringToUri(String uriString) {
+
+        // 設定ファイルから読み込んだパスが空でなければ
+        if (uriString != null && !uriString.equals("")) {
+            // StringをUriに変換する
+            return Uri.parse(uriString);
+        }
+        return null;
+    }
+
     private Bitmap loadImage(Uri uri, int viewWidth, int viewHeight) {
         // Uriから画像を読み込みBitmapを作成
         Bitmap originalBitmap = null;
         try {
-            originalBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+            originalBitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -96,7 +94,7 @@ public class change_backgroundActivity extends Activity {
 
         // MediaStoreから回転情報を取得
         final int orientation;
-        Cursor cursor = MediaStore.Images.Media.query(getContentResolver(), uri, new String[]{
+        Cursor cursor = MediaStore.Images.Media.query(context.getContentResolver(), uri, new String[]{
                 MediaStore.Images.ImageColumns.ORIENTATION
         });
         if (cursor != null) {
@@ -133,7 +131,6 @@ public class change_backgroundActivity extends Activity {
         // 行列によって変換されたBitmapを返す
         return Bitmap.createBitmap(originalBitmap, 0, 0, originalWidth, originalHeight, matrix,
                 true);
-
 
     }
 }

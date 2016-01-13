@@ -1,4 +1,4 @@
-package com.example.gourd.app;
+package com.teamona.gourd.app;
 
 /**
  * Created by ruzeya on 2014/06/20.

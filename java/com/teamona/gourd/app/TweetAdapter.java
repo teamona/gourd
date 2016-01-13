@@ -1,7 +1,9 @@
-package com.example.gourd.app;
+package com.teamona.gourd.app;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.loopj.android.image.SmartImageView;
 import twitter4j.Status;
-import twitter4j.Twitter;
 
-/**
- * Created by ruzeya on 2014/07/23.
- */
 public class TweetAdapter  extends android.widget.ArrayAdapter<twitter4j.Status> {
 
     private Context mContext;
@@ -41,6 +39,7 @@ public class TweetAdapter  extends android.widget.ArrayAdapter<twitter4j.Status>
 
         SmartImageView favButton = (SmartImageView) convertView.findViewById(R.id.fav);
         SmartImageView rtButton = (SmartImageView) convertView.findViewById(R.id.rt);
+        SmartImageView repButton = (SmartImageView) convertView.findViewById(R.id.rep);
         final Status status = getItem(position);
 
         favButton.setOnClickListener(new View.OnClickListener() {
@@ -75,6 +74,25 @@ public class TweetAdapter  extends android.widget.ArrayAdapter<twitter4j.Status>
             }
         });
 
+        repButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                switch (view.getId()){
+                    case R.id.rep:
+
+
+                        Intent intent1 = new Intent(mContext, TweetActivity.class); //TweetActivityに遷移
+                        Bundle bundle = new Bundle();
+                        bundle.putLong("in_reply_to",status.getId());   //in_reply_toを鍵としてstatusIDを引き出せるようにする。
+                        bundle.putString("target",status.getUser().getScreenName());
+                        intent1.putExtras(bundle);                      //intentにbundleを付加
+                        mContext.startActivity(intent1);                //TweetActivityに遷移
+
+                        //Toast.makeText(mContext, "リプライしました", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        });
         return convertView;
     }
 }

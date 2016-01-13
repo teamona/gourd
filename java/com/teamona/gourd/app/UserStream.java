@@ -1,18 +1,14 @@
-package com.example.gourd.app;
+package com.teamona.gourd.app;
 
 /**
  * Created by ruzeya on 2014/07/21.
  */
-        import android.content.Context;
-        import twitter4j.StallWarning;
-        import twitter4j.Status;
-        import twitter4j.StatusDeletionNotice;
-        import twitter4j.StatusListener;
-        import twitter4j.TwitterStream;
-        import twitter4j.TwitterStreamFactory;
-        import twitter4j.auth.AccessToken;
-        import twitter4j.conf.Configuration;
-        import twitter4j.conf.ConfigurationBuilder;
+
+import android.content.Context;
+import twitter4j.*;
+import twitter4j.auth.AccessToken;
+import twitter4j.conf.Configuration;
+import twitter4j.conf.ConfigurationBuilder;
 
 
 public class UserStream {

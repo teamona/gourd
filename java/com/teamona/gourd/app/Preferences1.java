@@ -1,9 +1,7 @@
-package com.example.gourd.app;
+package com.teamona.gourd.app;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
-import java.util.prefs.Preferences;
 
 /**
  * Created by ruzeya on 2014/09/17.

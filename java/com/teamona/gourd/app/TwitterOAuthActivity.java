@@ -1,4 +1,4 @@
-package com.example.gourd.app;
+package com.teamona.gourd.app;
 
 import android.app.Activity;
 import android.content.Intent;
