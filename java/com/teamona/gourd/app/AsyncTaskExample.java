@@ -33,6 +33,7 @@ public class AsyncTaskExample extends AsyncTask<Long, Void, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean result) {
+        super.onPostExecute(result);
         if (result) {
             // うまく行ったときの処理
         } else {

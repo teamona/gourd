@@ -1,9 +1,9 @@
 package com.teamona.gourd.app;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -18,7 +18,7 @@ import twitter4j.TwitterException;
   ページ移動
 * SobaChaのデュアルスクリーンなど*/
 
-public class TweetActivity extends Activity {
+public class TweetActivity extends FragmentActivity {
 
     private EditText mInputText;
     private Twitter mTwitter;
@@ -49,7 +49,8 @@ public class TweetActivity extends Activity {
             if (bundle != null){
                 target = bundle.getString("target");
                 inReplyTo = bundle.getLong("in_reply_to"); // inReplyTo <= status.getID()
-                mInputText.setText("@"+target);
+                mInputText.setText("@"+target+" ");
+                mInputText.setSelection(mInputText.getText().length());
                 showToast("成功: "+inReplyTo);
             }
 

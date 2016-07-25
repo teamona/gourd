@@ -2,6 +2,7 @@ package com.teamona.gourd.app;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.widget.Toast;
 import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -25,6 +26,7 @@ public class AsyncTaskRep extends AsyncTask<Long,Void, Boolean> {
         try {
             Twitter twitterRep = TwitterFactory.getSingleton();
             twitterRep.updateStatus(new StatusUpdate("@宛先スクリーン名 メッセージ").inReplyToStatusId(id));
+
             return true;
         } catch (TwitterException e) {
             e.printStackTrace();
@@ -34,10 +36,18 @@ public class AsyncTaskRep extends AsyncTask<Long,Void, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean result) {
+        super.onPostExecute(result);
         if (result) {
+            showToast("リプライしました");
             // うまく行ったときの処理
+
         } else {
             // 残念
         }
     }
+
+    private void showToast(String text){
+        android.widget.Toast.makeText(mContext,text,Toast.LENGTH_SHORT).show();
+    }
 }
+

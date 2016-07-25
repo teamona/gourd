@@ -18,6 +18,7 @@ import java.io.IOException;
 /**
  * Created by ruzeya on 2014/09/15.
  */
+
 public class ChangeBackground {
 
     private Bitmap bitmap;
@@ -25,7 +26,8 @@ public class ChangeBackground {
     private int viewWidth, viewHeight;
     private Context context;
 
-    public ChangeBackground(Context context, ImageView imageView) {// ウィンドウマネージャのインスタンス取得
+   public ChangeBackground(Context context, ImageView imageView) {
+   // ウィンドウマネージャのインスタンス取得
         this.context = context;
         this.imageView = imageView;
 

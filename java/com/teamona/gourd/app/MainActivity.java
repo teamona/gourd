@@ -4,50 +4,61 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.ListView;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
+//1階層
+public class MainActivity extends FragmentActivity implements AdapterHolder {
 
-    private TweetAdapter mAdapter;
+    private Map<EnumTab, TweetAdapter> mAdapterMap;
+
     private Twitter mTwitter;
-    private ListView mListView;
     private UserStream mUST;
     private ChangeBackground mChangeBackground;
+    private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_main);
 
-        mListView=(ListView) findViewById(R.id.listview);
+
+        mViewPager=(ViewPager) findViewById(R.id.viewPager);
 
         if (!TwitterUtils.hasAccessToken(this)) {
             Intent intent = new Intent(this,TwitterOAuthActivity.class);
             startActivity(intent);                              /*startActivityは別ので新しいActivityを立ち上げる。画面移動なんかが正にそれ！*/
             finish();
         }else {
-            mAdapter = new TweetAdapter(this);
-            mListView.setAdapter(mAdapter);
+            mAdapterMap = new HashMap<EnumTab, TweetAdapter>();
+            mAdapterMap.put(EnumTab.HOME,new TweetAdapter(this));
+            mAdapterMap.put(EnumTab.MENTION,new TweetAdapter(this));
+            mAdapterMap.put(EnumTab.LIST,new TweetAdapter(this));
+            mAdapterMap.put(EnumTab.SEARCH,new TweetAdapter(this));
+
 
             mTwitter = TwitterUtils.getTwitterInstance(this);
             reloadTimeLine();
 
             mUST = new UserStream(this);
-            mUST.setAdapter(mAdapter);
+            mUST.setAdapter(mAdapterMap.get(EnumTab.HOME));
             mUST.start();
         }
 
         // ChangeBackgroundを初期化する
         ImageView imageView = (ImageView) findViewById(R.id.imageViewBackground);
-        mChangeBackground = new ChangeBackground(this, imageView);
+        mChangeBackground = new ChangeBackground(this,imageView);
 
         // Preferencesを初期化する
         Preferences1 pref1 = new Preferences1(this);
@@ -62,7 +73,12 @@ public class MainActivity extends AppCompatActivity {
             // Uriから画像を読み込む
             mChangeBackground.loadFromUri(uri);
         }
+
+
+        // ViewPagerを初期化する
+        initializeViewPager();
     }
+
     /*ActionBarにメニューを表示*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -103,29 +119,34 @@ public class MainActivity extends AppCompatActivity {
                 }
                 return null;
             }
-
-
             @Override
             protected void onPostExecute(List<twitter4j.Status> result) {
                 if (result != null) {
-                    mAdapter.clear();
+                    mAdapterMap.get(EnumTab.HOME).clear();
                     for (twitter4j.Status status : result) {
-                        mAdapter.add(status);
+                        mAdapterMap.get(EnumTab.HOME).add(status);
                     }
-                    mListView.setSelection(0);
+                    //mListView.setSelection(0);
                 } else {
                     showToast("タイムラインの取得に失敗しました。。。");
                 }
             }
-
         };
         task.execute();
     }
 
-    private void showToast(String text) {
+    public void showToast(String text) {
        android.widget.Toast.makeText(this, text, android.widget.Toast.LENGTH_SHORT).show();
     }
 
+    private void initializeViewPager() {
+        SwipeAdapter adapter = new SwipeAdapter(getSupportFragmentManager());
+        mViewPager.setAdapter(adapter);
+    }
 
+    @Override
+    public TweetAdapter getAdapter(EnumTab tab) {
+        return mAdapterMap.get(tab);
+    }
 }
 
